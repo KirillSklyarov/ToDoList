@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol MainVCDelegateProtocol: AnyObject {
+    func getTasksName(categoryName: String)
+}
+
 final class MainViewController: UIViewController {
 
     private lazy var categoryTable: UITableView = {
@@ -22,11 +26,11 @@ final class MainViewController: UIViewController {
     private var newCat = ""
     private let colorsArray = Constants.randomColorArray
 
+    weak var delegate: MainVCDelegateProtocol?
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
         updateData()
-
         setupUI()
     }
 
@@ -126,6 +130,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let taskVC = TasksViewController()
+        self.delegate = taskVC
+        guard let cell = categoryTable.cellForRow(at: indexPath),
+              let categoryName = cell.textLabel?.text else { return }
+        delegate?.getTasksName(categoryName: categoryName)
         navigationController?.pushViewController(taskVC, animated: true)
     }
 
