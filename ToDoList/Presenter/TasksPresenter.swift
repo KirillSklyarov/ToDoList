@@ -14,6 +14,7 @@ protocol TasksPresenterProtocol: AnyObject {
     func getTasksCount() -> Int
     func getTaskName(_ indexPath: IndexPath) -> String
     func getColorHex(_ indexPath: IndexPath) -> String
+    func getTasksName(categoryName: String)
 }
 
 final class TasksPresenter: TasksPresenterProtocol {
@@ -58,10 +59,8 @@ final class TasksPresenter: TasksPresenterProtocol {
     func updateData() {
         getTasksName(categoryName: categoryName)
     }
-}
 
-// MARK: - MainVCDelegateProtocol
-extension TasksPresenter: MainVCDelegateProtocol {
+
     func getTasksName(categoryName: String) {
         let data = MockData.data
         let filteredData = data.filter { $0.categoryName == categoryName }
@@ -71,4 +70,5 @@ extension TasksPresenter: MainVCDelegateProtocol {
         }
     }
 }
+
 

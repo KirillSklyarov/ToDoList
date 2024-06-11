@@ -77,9 +77,15 @@ final class TasksViewController: UIViewController {
     }
 }
 
+// MARK: - MainVCDelegateProtocol
+extension TasksViewController: MainVCDelegateProtocol {
+    func getTasksName(categoryName: String) {
+        presenter.getTasksName(categoryName: categoryName)
+    }
+}
+
 // MARK: - TasksVCProtocol
 extension TasksViewController: TasksVCProtocol {
-
     func showAlert() {
         let alert = UIAlertController(title: "Добавь новое задание", message: nil, preferredStyle: .alert)
 
