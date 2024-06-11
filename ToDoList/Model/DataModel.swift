@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct DataModel {
+    var categoryName: String
+    var taskName: [String]
+}
+
+
