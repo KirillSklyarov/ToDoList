@@ -129,8 +129,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let taskVC = TasksViewController()
-        self.delegate = taskVC
+        let taskPresenter = TasksPresenter()
+        let taskVC = TasksViewController(presenter: taskPresenter)
+        taskPresenter.view = taskVC
+        self.delegate = taskPresenter
         guard let cell = categoryTable.cellForRow(at: indexPath),
               let categoryName = cell.textLabel?.text else { return }
         delegate?.getTasksName(categoryName: categoryName)

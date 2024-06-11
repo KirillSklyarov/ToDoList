@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol TasksVCProtocol: AnyObject {
+    func showAlert()
+}
+
 final class TasksViewController: UIViewController {
 
     // MARK: - UI Properties
@@ -20,29 +24,34 @@ final class TasksViewController: UIViewController {
     } ()
 
     // MARK: - Other Properties
-    private var data = [DataModel]()
-    private var newCat = ""
-    private let colorsArray = Constants.randomColorArray
-    private var tasks = [String]()
-    private var categoryName = ""
+    var presenter: TasksPresenterProtocol
 
+    // MARK: - Init
+    init(presenter: TasksPresenterProtocol) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Life cycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateData()
+        presenter.updateData()
         setupUI()
     }
 
     // MARK: - IB Action
     @objc private func plusButtonTapped(sender: UIButton) {
-        showAlert()
+        presenter.plusButtonTapped()
     }
 
     // MARK: - Private methods
     private func setupUI() {
-        setupNavigation()
-
         view.backgroundColor = .white
+        setupNavigation()
         setupTableView()
     }
 
@@ -68,9 +77,10 @@ final class TasksViewController: UIViewController {
     }
 }
 
-// MARK: - Alert
-extension TasksViewController {
-    private func showAlert() {
+// MARK: - TasksVCProtocol
+extension TasksViewController: TasksVCProtocol {
+
+    func showAlert() {
         let alert = UIAlertController(title: "Добавь новое задание", message: nil, preferredStyle: .alert)
 
         alert.addTextField() { textfield in
@@ -82,29 +92,12 @@ extension TasksViewController {
                   let textField = alert.textFields?.first,
                   let newTaskName = textField.text else { return }
             if !newTaskName.isEmpty {
-                self.addNewTask(newTaskName: newTaskName)
+                presenter.addNewTask(newTaskName: newTaskName)
                 self.updateUI()
             }
         })
 
         present(alert, animated: true)
-    }
-
-    private func addNewTask(newTaskName: String) {
-        tasks.append(newTaskName)
-        addNewListOfTaskToStorage()
-        updateData()
-    }
-
-    private func addNewListOfTaskToStorage() {
-        let index = MockData.data.firstIndex { $0.categoryName == categoryName }
-        if let keyIndex = index {
-            MockData.data[keyIndex].taskName = tasks
-        }
-    }
-
-    private func updateData() {
-        getTasksName(categoryName: categoryName)
     }
 
     private func updateUI() {
@@ -114,22 +107,10 @@ extension TasksViewController {
     }
 }
 
-// MARK: - MainVCDelegateProtocol
-extension TasksViewController: MainVCDelegateProtocol {
-    func getTasksName(categoryName: String) {
-        let data = MockData.data
-        let filteredData = data.filter { $0.categoryName == categoryName }
-        if let taskNames = filteredData.first?.taskName {
-            tasks = taskNames
-            self.categoryName = categoryName
-        }
-    }
-}
-
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tasks.count
+        presenter.getTasksCount()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -143,11 +124,11 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     private func configureCell(cell: UITableViewCell, indexPath: IndexPath) {
-        let taskName = tasks[indexPath.row]
+        let taskName = presenter.getTaskName(indexPath)
         cell.textLabel?.text = taskName
         cell.textLabel?.textColor = .white
 
-        let colorString = colorsArray[indexPath.row]
+        let colorString = presenter.getColorHex(indexPath)
         cell.backgroundColor = UIColor(hexString: colorString)
         cell.selectionStyle = .none
     }
