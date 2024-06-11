@@ -9,30 +9,36 @@ import Foundation
 
 protocol TasksPresenterProtocol: AnyObject {
     func plusButtonTapped()
-    func addNewTask(newTaskName: String)
-    func updateData()
     func getTasksCount() -> Int
     func getTaskName(_ indexPath: IndexPath) -> String
     func getColorHex(_ indexPath: IndexPath) -> String
-    func getTasksName(categoryName: String)
 }
 
 final class TasksPresenter: TasksPresenterProtocol {
-
+    
     weak var view: TasksVCProtocol?
+    var storage: DataStorage
 
-    private var data = [DataModel]()
+    init(storage: DataStorage) {
+        self.storage = storage
+        updateUI()
+    }
+
     private var newCat = ""
     let colorsArray = Constants.randomColorArray
-    var tasks = [String]()
-    var categoryName = ""
+
+    private func updateUI() {
+        storage.tasksUpdated = { [weak self] in
+            self?.view?.updateUI()
+        }
+    }
 
     func getTasksCount() -> Int {
-        tasks.count
+        return storage.tasks.count
     }
 
     func getTaskName(_ indexPath: IndexPath) -> String {
-        tasks[indexPath.row]
+        storage.tasks[indexPath.row]
     }
 
     func getColorHex(_ indexPath: IndexPath) -> String {
@@ -43,32 +49,12 @@ final class TasksPresenter: TasksPresenterProtocol {
         view?.showAlert()
     }
 
-    func addNewTask(newTaskName: String) {
-        tasks.append(newTaskName)
-        addNewListOfTaskToStorage()
-        updateData()
-    }
+//    func addNewTask(newTaskName: String) {
+//        storage.addNewListOfTaskToStorage(newTaskName)
+//        updateData()
+//    }
 
-    private func addNewListOfTaskToStorage() {
-        let index = MockData.data.firstIndex { $0.categoryName == categoryName }
-        if let keyIndex = index {
-            MockData.data[keyIndex].taskName = tasks
-        }
-    }
-
-    func updateData() {
-        getTasksName(categoryName: categoryName)
-    }
-
-
-    func getTasksName(categoryName: String) {
-        let data = MockData.data
-        let filteredData = data.filter { $0.categoryName == categoryName }
-        if let taskNames = filteredData.first?.taskName {
-            tasks = taskNames
-            self.categoryName = categoryName
-        }
-    }
+//    func updateData() {
+//         getTasksName(categoryName: categoryName)
+//    }
 }
-
-

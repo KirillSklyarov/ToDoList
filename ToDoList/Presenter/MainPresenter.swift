@@ -11,46 +11,45 @@ protocol MainPresenterProtocol: AnyObject {
     func getCategoryCount() -> Int
     func getCategoryName(_ indexPath: IndexPath) -> String
     func getColorHex(_ indexPath: IndexPath) -> String
-    func updateData()
     func plusButtonTapped()
-    func addNewCategory(newCategoryName: String)
+    func passSelectedCategory(_ categoryName: String)
 }
 
 final class MainPresenter: MainPresenterProtocol {
 
-    var data = [DataModel]()
-    var newCat = ""
     let colorsArray = Constants.randomColorArray
 
     weak var view: MainVCProtocol?
+    var storage: DataStorage
+
+    init(storage: DataStorage) {
+        self.storage = storage
+        updateUI()
+    }
+
+    func updateUI() {
+        storage.tasksUpdated = { [weak self] in
+            self?.view?.updateUI()
+        }
+    }
+
+    func passSelectedCategory(_ categoryName: String) {
+        storage.getTasksName(categoryName: categoryName)
+    }
 
     func plusButtonTapped() {
         view?.showAlert()
     }
 
-    func addNewCategory(newCategoryName: String) {
-        let newCat = DataModel(categoryName: newCategoryName, taskName: [])
-        MockData.data.append(newCat)
-        updateData()
-    }
-
-
     func getCategoryCount() -> Int {
-        data.count
+        storage.data.count
     }
 
     func getCategoryName(_ indexPath: IndexPath) -> String {
-        data[indexPath.row].categoryName
+        storage.data[indexPath.row].categoryName
     }
 
     func getColorHex(_ indexPath: IndexPath) -> String {
         colorsArray[indexPath.row]
     }
-
-    func updateData() {
-        data = MockData.data
-    }
-
-
-
 }

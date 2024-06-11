@@ -7,12 +7,9 @@
 
 import UIKit
 
-protocol MainVCDelegateProtocol: AnyObject {
-    func getTasksName(categoryName: String)
-}
-
 protocol MainVCProtocol: AnyObject {
     func showAlert()
+    func updateUI()
 }
 
 final class MainViewController: UIViewController {
@@ -29,7 +26,6 @@ final class MainViewController: UIViewController {
 
     // MARK: - Other Properties
     var presenter: MainPresenterProtocol
-    weak var delegate: MainVCDelegateProtocol?
 
     // MARK: - Init
     init(presenter: MainPresenterProtocol) {
@@ -44,7 +40,6 @@ final class MainViewController: UIViewController {
     // MARK: - Life cycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.updateData()
         setupUI()
     }
 
@@ -87,34 +82,19 @@ final class MainViewController: UIViewController {
             categoryTable.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+
+    func updateUI() {
+        DispatchQueue.main.async { [weak self] in
+            self?.categoryTable.reloadData()
+        }
+    }
 }
 
 // MARK: - MainVCProtocol
 extension MainViewController: MainVCProtocol {
     func showAlert() {
-        let alert = UIAlertController(title: "Добавь новую категорию", message: nil, preferredStyle: .alert)
-
-        alert.addTextField() { textfield in
-            textfield.placeholder = "Введите новую категорию"
-        }
-        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Добавить", style: .default) { [weak self] textField in
-            guard let self,
-                  let textField = alert.textFields?.first,
-                  let newCatName = textField.text else { return }
-            if !newCatName.isEmpty {
-                presenter.addNewCategory(newCategoryName: newCatName)
-                self.updateUI()
-            }
-        })
-
-        present(alert, animated: true)
-    }
-
-    private func updateUI() {
-        DispatchQueue.main.async { [weak self] in
-            self?.categoryTable.reloadData()
-        }
+        let alertController = AlertController()
+        alertController.showAnyAlert(screens: .Main, from: self)
     }
 }
 
@@ -136,16 +116,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let taskVC = ScreenFactory.createScreen(.Task)
-        completeDelegate(taskVC, indexPath: indexPath)
+        passSelectedCategory(indexPath: indexPath)
         navigationController?.pushViewController(taskVC, animated: true)
     }
 
-    private func completeDelegate(_ viewController: UIViewController, indexPath: IndexPath) {
-        guard let castVC = viewController as? MainVCDelegateProtocol else { print("Casting issue"); return }
-        self.delegate = castVC
+    private func passSelectedCategory(indexPath: IndexPath) {
         guard let cell = categoryTable.cellForRow(at: indexPath),
               let categoryName = cell.textLabel?.text else { return }
-        delegate?.getTasksName(categoryName: categoryName)
+        presenter.passSelectedCategory(categoryName)
     }
 
     private func configureCell(cell: UITableViewCell, indexPath: IndexPath) {

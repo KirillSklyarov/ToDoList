@@ -9,6 +9,7 @@ import UIKit
 
 protocol TasksVCProtocol: AnyObject {
     func showAlert()
+    func updateUI()
 }
 
 final class TasksViewController: UIViewController {
@@ -31,15 +32,14 @@ final class TasksViewController: UIViewController {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Life cycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter.updateData()
         setupUI()
     }
 
@@ -77,36 +77,14 @@ final class TasksViewController: UIViewController {
     }
 }
 
-// MARK: - MainVCDelegateProtocol
-extension TasksViewController: MainVCDelegateProtocol {
-    func getTasksName(categoryName: String) {
-        presenter.getTasksName(categoryName: categoryName)
-    }
-}
-
 // MARK: - TasksVCProtocol
 extension TasksViewController: TasksVCProtocol {
     func showAlert() {
-        let alert = UIAlertController(title: "Добавь новое задание", message: nil, preferredStyle: .alert)
-
-        alert.addTextField() { textfield in
-            textfield.placeholder = "Введите новое задание"
-        }
-        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Добавить", style: .default) { [weak self] textField in
-            guard let self,
-                  let textField = alert.textFields?.first,
-                  let newTaskName = textField.text else { return }
-            if !newTaskName.isEmpty {
-                presenter.addNewTask(newTaskName: newTaskName)
-                self.updateUI()
-            }
-        })
-
-        present(alert, animated: true)
+        let alertController = AlertController()
+        alertController.showAnyAlert(screens: .Task, from: self)
     }
 
-    private func updateUI() {
+    func updateUI() {
         DispatchQueue.main.async { [weak self] in
             self?.tasksTable.reloadData()
         }
