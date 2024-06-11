@@ -18,11 +18,15 @@ final class MainViewController: UIViewController {
         return table
     } ()
 
-    private var data = MockData.data
+    private var data = [DataModel]()
     private var newCat = ""
+    private let colorsArray = Constants.randomColorArray
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        updateData()
+
         setupUI()
     }
 
@@ -90,8 +94,11 @@ extension MainViewController {
     private func addNewCategory(newCategoryName: String) {
         let newCat = DataModel(categoryName: newCategoryName, taskName: [])
         MockData.data.append(newCat)
+        updateData()
+    }
+
+    private func updateData() {
         data = MockData.data
-        print(MockData.data)
     }
 
     private func updateUI() {
@@ -127,8 +134,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.textLabel?.text = categoryName
         cell.textLabel?.textColor = .white
 
-        let randomColorArray = Constants.colorsHex.shuffled()
-        let colorString = randomColorArray[indexPath.row]
+        let colorString = colorsArray[indexPath.row]
         cell.backgroundColor = UIColor(hexString: colorString)
         cell.selectionStyle = .none
     }
