@@ -66,36 +66,6 @@
             endingLineNumber = "31"
             landmarkName = "updateUI()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "B8033BCE-65B4-44E8-8594-6498574975B7 - 4e67d2dd241e070b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ToDoList.MainPresenter.updateUI() -&gt; ()"
-                  moduleName = "ToDoList"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kirillsklyarov/Documents/Udemy/AngelaYu/ToDoList/ToDoList/Presenter/MainPresenter.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "31"
-                  endingLineNumber = "31">
-               </Location>
-               <Location
-                  uuid = "B8033BCE-65B4-44E8-8594-6498574975B7 - 5f4862473366f907"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; () in ToDoList.MainPresenter.updateUI() -&gt; ()"
-                  moduleName = "ToDoList"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kirillsklyarov/Documents/Udemy/AngelaYu/ToDoList/ToDoList/Presenter/MainPresenter.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "31"
-                  endingLineNumber = "31">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

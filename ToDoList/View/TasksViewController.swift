@@ -56,8 +56,8 @@ final class TasksViewController: UIViewController {
     }
 
     private func setupNavigation() {
+        title = presenter.getCategoryName()
         navigationItem.largeTitleDisplayMode = .never
-        navigationController?.navigationBar.tintColor = .white
 
         let plusButton = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: plusButton, style: .plain, target: self, action: #selector(plusButtonTapped))

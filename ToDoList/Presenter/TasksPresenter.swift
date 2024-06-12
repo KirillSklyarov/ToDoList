@@ -12,6 +12,7 @@ protocol TasksPresenterProtocol: AnyObject {
     func getTasksCount() -> Int
     func getTaskName(_ indexPath: IndexPath) -> String
     func getColorHex(_ indexPath: IndexPath) -> String
+    func getCategoryName() -> String
 }
 
 final class TasksPresenter: TasksPresenterProtocol {
@@ -35,6 +36,10 @@ final class TasksPresenter: TasksPresenterProtocol {
 
     func getTasksCount() -> Int {
         return storage.tasks.count
+    }
+
+    func getCategoryName() -> String {
+        return storage.categoryName
     }
 
     func getTaskName(_ indexPath: IndexPath) -> String {
