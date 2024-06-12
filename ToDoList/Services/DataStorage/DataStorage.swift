@@ -6,39 +6,30 @@
 //
 
 import Foundation
+import Combine
 
-final class DataStorage {
+final class DataStorage: ObservableObject {
 
     static let shared = DataStorage()
 
     private init() { }
 
-    var data: [DataModel] = [
+    @Published var data: [DataModel] = [
         DataModel(categoryName: "Home", taskName: ["first1", "second1", "third1"]),
         DataModel(categoryName: "Work", taskName: ["first2", "second2", "third2"]),
         DataModel(categoryName: "Learn", taskName: ["first3", "second3", "third3"]),
         DataModel(categoryName: "Eat", taskName: ["first4", "second4", "third4"]),
         DataModel(categoryName: "Shopping List", taskName: ["first5", "second5", "third5"]),
-    ] {
-        didSet {
-            tasksUpdated?()
-        }
-    }
+    ]
 
-    var tasks = [String]() {
-        didSet {
-            print("Here tasks \(tasks)")
-            tasksUpdated?()
-        }
-    }
-
-    var tasksUpdated: ( () -> Void )?
+    @Published var tasks = [String]()
 
     var categoryName = ""
 
     func addNewCategory(newCategoryName: String) {
         let newCat = DataModel(categoryName: newCategoryName, taskName: [])
         data.append(newCat)
+        print("data \(data)")
     }
 
     func addNewListOfTaskToStorage() {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol MainPresenterProtocol: AnyObject {
     func getCategoryCount() -> Int
@@ -17,20 +18,24 @@ protocol MainPresenterProtocol: AnyObject {
 
 final class MainPresenter: MainPresenterProtocol {
 
-    let colorsArray = Constants.randomColorArray
+    private let colorsArray = Constants.randomColorArray
 
     weak var view: MainVCProtocol?
-    var storage: DataStorage
+    private var storage: DataStorage
+    private var cancellables: Set<AnyCancellable> = []
 
     init(storage: DataStorage) {
         self.storage = storage
-        updateUI()
+        dataBindingAndUpdateUI()
     }
 
-    func updateUI() {
-        storage.tasksUpdated = { [weak self] in
-            self?.view?.updateUI()
-        }
+    func dataBindingAndUpdateUI() {
+        storage.$data
+            .sink { [weak self] _ in
+                guard let self else { print("Ooops"); return }
+                self.view?.updateUI()
+            }
+            .store(in: &cancellables)
     }
 
     func passSelectedCategory(_ categoryName: String) {

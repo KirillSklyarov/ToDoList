@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol TasksPresenterProtocol: AnyObject {
     func plusButtonTapped()
@@ -16,23 +17,25 @@ protocol TasksPresenterProtocol: AnyObject {
 }
 
 final class TasksPresenter: TasksPresenterProtocol {
-    
+
     weak var view: TasksVCProtocol?
-    var storage: DataStorage
+    private var storage: DataStorage
+    private var cancellables: Set<AnyCancellable> = []
+    private var newCat = ""
+    private let colorsArray = Constants.randomColorArray
 
     init(storage: DataStorage) {
         self.storage = storage
-        updateUI()
+        dataBindingAndUpdateUI()
     }
 
-    private var newCat = ""
-    let colorsArray = Constants.randomColorArray
-
-    private func updateUI() {
-        storage.tasksUpdated = { [weak self] in
-            self?.view?.updateUI()
+    private func dataBindingAndUpdateUI() {
+        storage.$tasks
+            .sink { [weak self] _ in
+                self?.view?.updateUI()
+            }
+            .store(in: &cancellables)
         }
-    }
 
     func getTasksCount() -> Int {
         return storage.tasks.count
@@ -53,13 +56,4 @@ final class TasksPresenter: TasksPresenterProtocol {
     func plusButtonTapped() {
         view?.showAlert()
     }
-
-//    func addNewTask(newTaskName: String) {
-//        storage.addNewListOfTaskToStorage(newTaskName)
-//        updateData()
-//    }
-
-//    func updateData() {
-//         getTasksName(categoryName: categoryName)
-//    }
 }
