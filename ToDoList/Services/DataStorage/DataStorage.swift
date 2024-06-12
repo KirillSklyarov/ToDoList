@@ -41,8 +41,7 @@ final class DataStorage {
         data.append(newCat)
     }
 
-    func addNewListOfTaskToStorage(_ categoryName: String) {
-        getTasksName(categoryName: categoryName)
+    func addNewListOfTaskToStorage() {
         let index = data.firstIndex { $0.categoryName == categoryName }
         if let keyIndex = index {
             data[keyIndex].taskName = tasks
@@ -51,7 +50,7 @@ final class DataStorage {
 
     func addNewTask(newTaskName: String) {
         tasks.append(newTaskName)
-        addNewListOfTaskToStorage(newTaskName)
+        addNewListOfTaskToStorage()
     }
 
     func getTasksName(categoryName: String) {

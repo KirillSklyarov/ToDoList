@@ -82,12 +82,6 @@ final class MainViewController: UIViewController {
             categoryTable.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-
-    func updateUI() {
-        DispatchQueue.main.async { [weak self] in
-            self?.categoryTable.reloadData()
-        }
-    }
 }
 
 // MARK: - MainVCProtocol
@@ -95,6 +89,12 @@ extension MainViewController: MainVCProtocol {
     func showAlert() {
         let alertController = AlertController()
         alertController.showAnyAlert(screens: .Main, from: self)
+    }
+
+    func updateUI() {
+        DispatchQueue.main.async { [weak self] in
+            self?.categoryTable.reloadData()
+        }
     }
 }
 
