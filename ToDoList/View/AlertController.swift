@@ -27,7 +27,9 @@ final class AlertController: UIAlertController {
             guard let textField = alert.textFields?.first,
                   let newCatName = textField.text else { return }
             if !newCatName.isEmpty {
-                DataStorage.shared.addNewCategory(newCategoryName: newCatName)
+                CoreDataManager.shared.addCategory(newCategoryName: newCatName)
+
+//                DataStorage.shared.addNewCategory(newCategoryName: newCatName)
             }
         })
 

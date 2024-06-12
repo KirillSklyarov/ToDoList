@@ -25,7 +25,9 @@ final class MainViewController: UIViewController {
     } ()
 
     // MARK: - Other Properties
-    var presenter: MainPresenterProtocol
+    private var presenter: MainPresenterProtocol
+
+    private var cdManager = CoreDataManager.shared
 
     // MARK: - Init
     init(presenter: MainPresenterProtocol) {
@@ -41,6 +43,11 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        fetchData()
+    }
+
+    func fetchData() {
+        cdManager.fetchData()
     }
 
     // MARK: - IB Action
