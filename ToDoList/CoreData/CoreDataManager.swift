@@ -27,7 +27,8 @@ final class CoreDataManager: NSObject {
             if let error = error as NSError? {
                 print("🔴 Unresolved error \(error), \(error.userInfo)")
             } else {
-                print("✅ CoreDate upload successfully \(String(describing: storeDescription.url))")
+                print("✅ CoreDate upload successfully")
+//                \(String(describing: storeDescription.url))
             }
         })
         return container
@@ -75,19 +76,51 @@ final class CoreDataManager: NSObject {
     }
 
     func addNewTask(categoryName: String, newTask: String) {
-        print("categoryName \(categoryName)")
+//        print("categoryName \(categoryName)")
         let request = CategoryCoreDataEntity.fetchRequest()
         request.predicate = NSPredicate(format: "categoryName = %@", categoryName)
 
         do {
             let result = try context.fetch(request)
-            print("result \(result)")
+//            print("result \(result)")
             let keyCategory = result.first
             let newTaskToAdd = TasksCoreDataEntity(context: context)
             newTaskToAdd.taskName = newTask
             keyCategory?.addToTasks(newTaskToAdd)
             saveContext()
             print("New task added successfully ✅")
+            fetchData()
+        } catch {
+            print("🔴 \(error.localizedDescription)")
+        }
+    }
+
+    func removeTask(categoryName: String, task: String) {
+//        print("categoryName \(categoryName)")
+        let categoryRequest = CategoryCoreDataEntity.fetchRequest()
+        categoryRequest.predicate = NSPredicate(format: "categoryName = %@", categoryName)
+
+        let taskRequest = TasksCoreDataEntity.fetchRequest()
+        taskRequest.predicate = NSPredicate(format: "taskName = %@", task)
+
+        do {
+            let categoryResult = try context.fetch(categoryRequest)
+            let taskResult = try context.fetch(taskRequest)
+
+            let category = categoryResult.first
+            let taskToRemove = taskResult.first
+
+            category?.removeFromTasks(taskToRemove!)
+            context.delete(taskToRemove!)
+            
+            saveContext()
+
+//            let newTaskToAdd = TasksCoreDataEntity(context: context)
+//            newTaskToAdd.taskName = newTask
+//            keyCategory?.addToTasks(newTaskToAdd)
+//            saveContext()
+            print("Task deleted successfully ✅")
+            fetchData()
         } catch {
             print("🔴 \(error.localizedDescription)")
         }

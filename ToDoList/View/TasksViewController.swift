@@ -163,6 +163,16 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
         Constants.cellHeight
     }
 
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self]  _,_,_ in
+            self?.presenter.deleteTask(indexPath: indexPath)
+            self?.updateUI()
+        }
+        deleteAction.backgroundColor = .systemRed
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
+    }
+
     private func configureCell(cell: UITableViewCell, indexPath: IndexPath) {
         let taskName = presenter.getTaskName(indexPath)
         cell.textLabel?.text = taskName

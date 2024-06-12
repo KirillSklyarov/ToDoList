@@ -18,10 +18,18 @@ final class DataStorage: ObservableObject {
     @Published var tasks = [String]()
 
     var categoryName = ""
-//    private let cdManager = CoreDataManager.shared
 
     func addNewTask(newTaskName: String) {
         CoreDataManager.shared.addNewTask(categoryName: categoryName, newTask: newTaskName)
+        tasks.append(newTaskName)
+    }
+
+    func deleteTask(taskIndex: Int) {
+        let taskToRemove = tasks[taskIndex]
+        tasks.remove(at: taskIndex)
+        CoreDataManager.shared.removeTask(categoryName: categoryName, task: taskToRemove) 
+//        addNewTask(categoryName: categoryName, newTask: newTaskName)
+
     }
 
     func getTasksName(categoryName: String) {

@@ -14,6 +14,7 @@ protocol TasksPresenterProtocol: AnyObject {
     func getTaskName(_ indexPath: IndexPath) -> String
     func getColorHex(_ indexPath: IndexPath) -> String
     func getCategoryName() -> String
+    func deleteTask(indexPath: IndexPath)
 }
 
 final class TasksPresenter: TasksPresenterProtocol {
@@ -36,6 +37,12 @@ final class TasksPresenter: TasksPresenterProtocol {
             }
             .store(in: &cancellables)
         }
+
+    func deleteTask(indexPath: IndexPath) {
+        let index = indexPath.row
+//        print("Delete")
+        storage.deleteTask(taskIndex: index)
+    }
 
     func getTasksCount() -> Int {
         return storage.tasks.count
