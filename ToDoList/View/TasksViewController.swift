@@ -24,6 +24,28 @@ final class TasksViewController: UIViewController {
         return table
     } ()
 
+    private lazy var placeholderImage: UIImageView = {
+        let imageView = UIImageView()
+        let image = UIImage(systemName: "x.circle.fill")
+        imageView.image = image
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
+        imageView.heightAnchor.constraint(equalToConstant: 140).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 140).isActive = true
+        return imageView
+    } ()
+
+    private lazy var placeholderText: UILabel = {
+        let label = UILabel()
+        label.text = "У тебя пока нет заданий в этой категории"
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 20)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = true
+        return label
+    } ()
+
     // MARK: - Other Properties
     var presenter: TasksPresenterProtocol
 
@@ -41,6 +63,7 @@ final class TasksViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        showOrHidePlaceholder()
     }
 
     // MARK: - IB Action
@@ -73,6 +96,39 @@ final class TasksViewController: UIViewController {
             tasksTable.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tasksTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tasksTable.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+
+    private func showOrHidePlaceholder() {
+        if presenter.getTasksCount() == 0 {
+            showPlaceholder()
+        }
+    }
+
+    private func showPlaceholder() {
+        tasksTable.isHidden = true
+        placeholderImage.isHidden = false
+        placeholderText.isHidden = false
+
+        let container = UIView()
+        container.addSubview(placeholderImage)
+        NSLayoutConstraint.activate([
+            placeholderImage.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            placeholderImage.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+        ])
+
+        let stack = UIStackView(arrangedSubviews: [container, placeholderText])
+        stack.axis = .vertical
+        stack.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(stack)
+
+        NSLayoutConstraint.activate([
+            stack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stack.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.25),
+            placeholderText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            placeholderText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
         ])
     }
 }

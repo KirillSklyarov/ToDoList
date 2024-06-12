@@ -15,35 +15,13 @@ final class DataStorage: ObservableObject {
     private init() { }
 
     @Published var data: [DataModel] = []
-    
-//    [
-//        DataModel(categoryName: "Home", taskName: ["first1", "second1", "third1"]),
-//        DataModel(categoryName: "Work", taskName: ["first2", "second2", "third2"]),
-//        DataModel(categoryName: "Learn", taskName: ["first3", "second3", "third3"]),
-//        DataModel(categoryName: "Eat", taskName: ["first4", "second4", "third4"]),
-//        DataModel(categoryName: "Shopping List", taskName: ["first5", "second5", "third5"]),
-//    ]
-
     @Published var tasks = [String]()
 
     var categoryName = ""
-
-    func addNewCategory(newCategoryName: String) {
-        let newCat = DataModel(categoryName: newCategoryName, taskName: [])
-        data.append(newCat)
-        print("data \(data)")
-    }
-
-    func addNewListOfTaskToStorage() {
-        let index = data.firstIndex { $0.categoryName == categoryName }
-        if let keyIndex = index {
-            data[keyIndex].taskName = tasks
-        }
-    }
+//    private let cdManager = CoreDataManager.shared
 
     func addNewTask(newTaskName: String) {
-        tasks.append(newTaskName)
-        addNewListOfTaskToStorage()
+        CoreDataManager.shared.addNewTask(categoryName: categoryName, newTask: newTaskName)
     }
 
     func getTasksName(categoryName: String) {

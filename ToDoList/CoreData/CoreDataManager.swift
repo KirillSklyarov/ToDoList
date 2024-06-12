@@ -16,7 +16,7 @@ final class CoreDataManager: NSObject {
 
     var newData = [DataModel]()
 
-    var data: [CategoryCoreDataEntity]?
+    var fetchedData: [CategoryCoreDataEntity]?
 
     private override init() { }
 
@@ -27,7 +27,7 @@ final class CoreDataManager: NSObject {
             if let error = error as NSError? {
                 print("🔴 Unresolved error \(error), \(error.userInfo)")
             } else {
-                print("✅ CoreDate upload successfully")
+                print("✅ CoreDate upload successfully \(String(describing: storeDescription.url))")
             }
         })
         return container
@@ -41,9 +41,8 @@ final class CoreDataManager: NSObject {
     func fetchData() {
         let request = CategoryCoreDataEntity.fetchRequest()
         do {
-            data = try context.fetch(request)
-            print("data \(data!)")
-            CDCategoryMapping(coreData: data)
+            fetchedData = try context.fetch(request)
+            CDCategoryMapping(coreData: fetchedData)
         } catch {
             print(error.localizedDescription)
         }
@@ -51,13 +50,20 @@ final class CoreDataManager: NSObject {
 
     func CDCategoryMapping(coreData: [CategoryCoreDataEntity]?) {
         guard let coreData else { print("Hmmm"); return }
+        newData = []
+        var taskNames = [String]()
         coreData.forEach { element in
-            let categoryName = element.categoryName
-            let tasksToString = element.tasks?.compactMap { $0 as? String }
-            let data = DataModel(categoryName: categoryName!, taskName: tasksToString!)
+            guard let categoryName = element.categoryName,
+                  let tasks = element.tasks as? Set<TasksCoreDataEntity> else { print("123"); return }
+            taskNames = tasks.compactMap { $0.taskName }
+            let data = DataModel(categoryName: categoryName, taskName: taskNames)
             newData.append(data)
         }
-        print("newData \(newData)")
+        sendFetchedDataToStorage()
+    }
+
+    func sendFetchedDataToStorage() {
+        storage.data = newData
     }
 
     func addCategory(newCategoryName: String) {
@@ -65,6 +71,26 @@ final class CoreDataManager: NSObject {
         newCategory.categoryName = newCategoryName
         saveContext()
         print("New category created successfully ✅")
+        fetchData()
+    }
+
+    func addNewTask(categoryName: String, newTask: String) {
+        print("categoryName \(categoryName)")
+        let request = CategoryCoreDataEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "categoryName = %@", categoryName)
+
+        do {
+            let result = try context.fetch(request)
+            print("result \(result)")
+            let keyCategory = result.first
+            let newTaskToAdd = TasksCoreDataEntity(context: context)
+            newTaskToAdd.taskName = newTask
+            keyCategory?.addToTasks(newTaskToAdd)
+            saveContext()
+            print("New task added successfully ✅")
+        } catch {
+            print("🔴 \(error.localizedDescription)")
+        }
     }
 
     func saveContext() {

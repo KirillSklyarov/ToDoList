@@ -109,8 +109,8 @@
 			children = (
 				73E8351A2C19B6830074A64A /* TasksCoreDataEntity.swift */,
 				73E8351C2C19B6830074A64A /* CategoryCoreDataEntity.swift */,
-				73CF030E2C188B82002E1599 /* ToDoList.xcdatamodeld */,
 				73E835212C19BF020074A64A /* CoreDataManager.swift */,
+				73CF030E2C188B82002E1599 /* ToDoList.xcdatamodeld */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
