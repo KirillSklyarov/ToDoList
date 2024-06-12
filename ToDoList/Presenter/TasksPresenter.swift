@@ -40,8 +40,8 @@ final class TasksPresenter: TasksPresenterProtocol {
 
     func deleteTask(indexPath: IndexPath) {
         let index = indexPath.row
-//        print("Delete")
         storage.deleteTask(taskIndex: index)
+        view?.updateUI()
     }
 
     func getTasksCount() -> Int {

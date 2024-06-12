@@ -88,7 +88,7 @@ final class CoreDataManager: NSObject {
             newTaskToAdd.taskName = newTask
             keyCategory?.addToTasks(newTaskToAdd)
             saveContext()
-            print("New task added successfully ✅")
+            print("✅ New task added successfully")
             fetchData()
         } catch {
             print("🔴 \(error.localizedDescription)")
@@ -96,7 +96,6 @@ final class CoreDataManager: NSObject {
     }
 
     func removeTask(categoryName: String, task: String) {
-//        print("categoryName \(categoryName)")
         let categoryRequest = CategoryCoreDataEntity.fetchRequest()
         categoryRequest.predicate = NSPredicate(format: "categoryName = %@", categoryName)
 
@@ -106,20 +105,28 @@ final class CoreDataManager: NSObject {
         do {
             let categoryResult = try context.fetch(categoryRequest)
             let taskResult = try context.fetch(taskRequest)
-
             let category = categoryResult.first
             let taskToRemove = taskResult.first
-
             category?.removeFromTasks(taskToRemove!)
             context.delete(taskToRemove!)
-            
             saveContext()
+            print("✅ Task deleted successfully")
+            fetchData()
+        } catch {
+            print("🔴 \(error.localizedDescription)")
+        }
+    }
 
-//            let newTaskToAdd = TasksCoreDataEntity(context: context)
-//            newTaskToAdd.taskName = newTask
-//            keyCategory?.addToTasks(newTaskToAdd)
-//            saveContext()
-            print("Task deleted successfully ✅")
+    func removeCategory(categoryName: String) {
+        let categoryRequest = CategoryCoreDataEntity.fetchRequest()
+        categoryRequest.predicate = NSPredicate(format: "categoryName = %@", categoryName)
+
+        do {
+            let categoryResult = try context.fetch(categoryRequest)
+            guard let categoryToRemove = categoryResult.first else { print("Jopa"); return }
+            context.delete(categoryToRemove)
+            saveContext()
+            print("✅ Category deleted successfully")
             fetchData()
         } catch {
             print("🔴 \(error.localizedDescription)")

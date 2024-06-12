@@ -14,6 +14,7 @@ protocol MainPresenterProtocol: AnyObject {
     func getColorHex(_ indexPath: IndexPath) -> String
     func plusButtonTapped()
     func passSelectedCategory(_ categoryName: String)
+    func deleteCategory(indexPath: IndexPath)
 }
 
 final class MainPresenter: MainPresenterProtocol {
@@ -36,6 +37,12 @@ final class MainPresenter: MainPresenterProtocol {
                 self.view?.updateUI()
             }
             .store(in: &cancellables)
+    }
+
+    func deleteCategory(indexPath: IndexPath) {
+        let index = indexPath.row
+        storage.deleteCategory(categoryIndex: index)
+        view?.updateUI()
     }
 
     func passSelectedCategory(_ categoryName: String) {

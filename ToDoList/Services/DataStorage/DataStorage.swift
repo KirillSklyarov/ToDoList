@@ -27,9 +27,13 @@ final class DataStorage: ObservableObject {
     func deleteTask(taskIndex: Int) {
         let taskToRemove = tasks[taskIndex]
         tasks.remove(at: taskIndex)
-        CoreDataManager.shared.removeTask(categoryName: categoryName, task: taskToRemove) 
-//        addNewTask(categoryName: categoryName, newTask: newTaskName)
+        CoreDataManager.shared.removeTask(categoryName: categoryName, task: taskToRemove)
+    }
 
+    func deleteCategory(categoryIndex: Int) {
+        let categoryToRemove = data[categoryIndex].categoryName
+        data.remove(at: categoryIndex)
+        CoreDataManager.shared.removeCategory(categoryName: categoryToRemove)
     }
 
     func getTasksName(categoryName: String) {

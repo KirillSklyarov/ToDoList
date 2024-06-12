@@ -124,6 +124,15 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         Constants.cellHeight
     }
 
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self]  _,_,_ in
+            self?.presenter.deleteCategory(indexPath: indexPath)
+        }
+        deleteAction.backgroundColor = .systemRed
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
+    }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let taskVC = ScreenFactory.createScreen(.Task)
         passSelectedCategory(indexPath: indexPath)
