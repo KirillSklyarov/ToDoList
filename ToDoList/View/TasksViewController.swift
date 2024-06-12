@@ -102,6 +102,8 @@ final class TasksViewController: UIViewController {
     private func showOrHidePlaceholder() {
         if presenter.getTasksCount() == 0 {
             showPlaceholder()
+        } else {
+            hidePlaceholder()
         }
     }
 
@@ -131,6 +133,13 @@ final class TasksViewController: UIViewController {
             placeholderText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
         ])
     }
+
+    private func hidePlaceholder() {
+        tasksTable.isHidden = false
+        placeholderImage.isHidden = true
+        placeholderText.isHidden = true
+    }
+
 }
 
 // MARK: - TasksVCProtocol
@@ -142,6 +151,7 @@ extension TasksViewController: TasksVCProtocol {
 
     func updateUI() {
         DispatchQueue.main.async { [weak self] in
+            self?.showOrHidePlaceholder()
             self?.tasksTable.reloadData()
         }
     }
