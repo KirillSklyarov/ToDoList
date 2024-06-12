@@ -23,7 +23,6 @@ final class TasksViewController: UIViewController {
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     } ()
-
     private lazy var placeholderImage: UIImageView = {
         let imageView = UIImageView()
         let image = UIImage(systemName: "x.circle.fill")
@@ -34,7 +33,6 @@ final class TasksViewController: UIViewController {
         imageView.widthAnchor.constraint(equalToConstant: 140).isActive = true
         return imageView
     } ()
-
     private lazy var placeholderText: UILabel = {
         let label = UILabel()
         label.text = "У тебя пока нет заданий в этой категории"
@@ -44,6 +42,13 @@ final class TasksViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.isHidden = true
         return label
+    } ()
+    private lazy var searchController: UISearchController = {
+        let search = UISearchController(searchResultsController: nil)
+        search.obscuresBackgroundDuringPresentation = false
+        search.searchResultsUpdater = self
+        search.searchBar.searchTextField.backgroundColor = .white
+        return search
     } ()
 
     // MARK: - Other Properties
@@ -80,7 +85,8 @@ final class TasksViewController: UIViewController {
 
     private func setupNavigation() {
         title = presenter.getCategoryName()
-        navigationItem.largeTitleDisplayMode = .never
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
 
         let plusButton = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: plusButton, style: .plain, target: self, action: #selector(plusButtonTapped))
@@ -190,5 +196,17 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
         let colorString = presenter.getColorHex(indexPath)
         cell.backgroundColor = UIColor(hexString: colorString)
         cell.selectionStyle = .none
+    }
+}
+
+// MARK: - UISearchResultsUpdating
+extension TasksViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text else { return }
+        if !searchText.isEmpty {
+            presenter.filterTasks(filterText: searchText)
+        } else {
+            presenter.notSearchMode()
+        }
     }
 }

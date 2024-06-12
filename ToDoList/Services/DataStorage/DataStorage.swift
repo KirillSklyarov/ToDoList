@@ -16,8 +16,13 @@ final class DataStorage: ObservableObject {
 
     @Published var data: [DataModel] = []
     @Published var tasks = [String]()
+    @Published var filterTasks = [String]()
 
     var categoryName = ""
+
+    func filterTasks(filterText: String) {
+        filterTasks = tasks.filter { $0.contains(filterText) }
+    }
 
     func addNewTask(newTaskName: String) {
         CoreDataManager.shared.addNewTask(categoryName: categoryName, newTask: newTaskName)

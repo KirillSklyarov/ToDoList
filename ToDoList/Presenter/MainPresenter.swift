@@ -17,20 +17,24 @@ protocol MainPresenterProtocol: AnyObject {
     func deleteCategory(indexPath: IndexPath)
 }
 
-final class MainPresenter: MainPresenterProtocol {
+final class MainPresenter {
 
-    private let colorsArray = Constants.randomColorArray
-
+    // MARK: - View
     weak var view: MainVCProtocol?
+
+    // MARK: - Private properties
+    private let colorsArray = Constants.randomColorArray
     private var storage: DataStorage
     private var cancellables: Set<AnyCancellable> = []
 
+    // MARK: - Init
     init(storage: DataStorage) {
         self.storage = storage
         dataBindingAndUpdateUI()
     }
 
-    func dataBindingAndUpdateUI() {
+    // MARK: - Private methods
+    private func dataBindingAndUpdateUI() {
         storage.$data
             .sink { [weak self] _ in
                 guard let self else { print("Ooops"); return }
@@ -38,11 +42,14 @@ final class MainPresenter: MainPresenterProtocol {
             }
             .store(in: &cancellables)
     }
+}
+
+// MARK: - MainPresenterProtocol
+extension MainPresenter: MainPresenterProtocol {
 
     func deleteCategory(indexPath: IndexPath) {
         let index = indexPath.row
         storage.deleteCategory(categoryIndex: index)
-        view?.updateUI()
     }
 
     func passSelectedCategory(_ categoryName: String) {

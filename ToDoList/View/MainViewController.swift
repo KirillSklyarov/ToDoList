@@ -46,16 +46,16 @@ final class MainViewController: UIViewController {
         fetchData()
     }
 
-    func fetchData() {
-        cdManager.fetchData()
-    }
-
     // MARK: - IB Action
     @objc private func plusButtonTapped(sender: UIButton) {
         presenter.plusButtonTapped()
     }
 
     // MARK: - Private methods
+    private func fetchData() {
+        cdManager.fetchData()
+    }
+
     private func setupUI() {
         setupNavigation()
 
