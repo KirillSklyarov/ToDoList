@@ -150,6 +150,7 @@ final class TasksViewController: UIViewController {
 
 // MARK: - TasksVCProtocol
 extension TasksViewController: TasksVCProtocol {
+    
     func showAlert() {
         let alertController = AlertController()
         alertController.showAnyAlert(screens: .Task, from: self)
@@ -204,9 +205,9 @@ extension TasksViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else { return }
         if !searchText.isEmpty {
-            presenter.filterTasks(filterText: searchText)
+            presenter.filterTasks(with: searchText)
         } else {
-            presenter.notSearchMode()
+            presenter.fetchTasksNotSearchMode()
         }
     }
 }

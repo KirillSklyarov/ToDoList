@@ -14,17 +14,15 @@ final class ScreenFactory {
         case Task
     }
 
-    static let storage = DataStorage.shared
-
     static func createScreen(_ screen: Screens) -> UIViewController {
         switch screen {
         case .Main:
-            let presenter = MainPresenter(storage: storage)
+            let presenter = MainPresenter()
             let viewController = MainViewController(presenter: presenter)
             presenter.view = viewController as any MainVCProtocol
             return viewController
         case .Task:
-            let presenter = TasksPresenter(storage: storage)
+            let presenter = TasksPresenter()
             let viewController = TasksViewController(presenter: presenter)
             presenter.view = viewController
             return viewController

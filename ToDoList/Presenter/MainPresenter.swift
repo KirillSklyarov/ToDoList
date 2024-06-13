@@ -15,6 +15,7 @@ protocol MainPresenterProtocol: AnyObject {
     func plusButtonTapped()
     func passSelectedCategory(_ categoryName: String)
     func deleteCategory(indexPath: IndexPath)
+    func getDataFromCoreData()
 }
 
 final class MainPresenter {
@@ -24,19 +25,19 @@ final class MainPresenter {
 
     // MARK: - Private properties
     private let colorsArray = Constants.randomColorArray
-    private var storage: DataStorage
+    private var cdManager: CoreDataManager
     private var cancellables: Set<AnyCancellable> = []
 
     // MARK: - Init
-    init(storage: DataStorage) {
-        self.storage = storage
+    init(cdManager: CoreDataManager = CoreDataManager.shared) {
+        self.cdManager = cdManager
         dataBindingAndUpdateUI()
     }
 
     // MARK: - Private methods
     private func dataBindingAndUpdateUI() {
-        storage.$data
-            .sink { [weak self] _ in
+        cdManager.$fetchedCategories
+            .sink { [weak self]  _ in
                 guard let self else { print("Ooops"); return }
                 self.view?.updateUI()
             }
@@ -47,13 +48,17 @@ final class MainPresenter {
 // MARK: - MainPresenterProtocol
 extension MainPresenter: MainPresenterProtocol {
 
+    func getDataFromCoreData() {
+        cdManager.fetchCategories()
+    }
+
     func deleteCategory(indexPath: IndexPath) {
-        let index = indexPath.row
-        storage.deleteCategory(categoryIndex: index)
+        cdManager.deleteCategoryNEW(indexPath: indexPath)
     }
 
     func passSelectedCategory(_ categoryName: String) {
-        storage.getTasksName(categoryName: categoryName)
+        cdManager.getSelectedCategory(categoryName)
+        cdManager.fetchTasks()
     }
 
     func plusButtonTapped() {
@@ -61,11 +66,11 @@ extension MainPresenter: MainPresenterProtocol {
     }
 
     func getCategoryCount() -> Int {
-        storage.data.count
+        cdManager.fetchedCategories?.count ?? 0
     }
 
     func getCategoryName(_ indexPath: IndexPath) -> String {
-        storage.data[indexPath.row].categoryName
+        cdManager.fetchedCategories![indexPath.row].categoryName!
     }
 
     func getColorHex(_ indexPath: IndexPath) -> String {
