@@ -9,7 +9,7 @@ import UIKit
 
 final class AlertController: UIAlertController {
 
-    func showAnyAlert(screens: ScreenFactory.Screens, from viewController: UIViewController) {
+    func showAlert(screens: ScreenFactory.Screens, from viewController: UIViewController) {
         switch screens {
         case .Main: showAlertForMain(from: viewController)
         case .Task: showAlertForTask(from: viewController)
@@ -27,7 +27,7 @@ final class AlertController: UIAlertController {
             guard let textField = alert.textFields?.first,
                   let newCatName = textField.text else { return }
             if !newCatName.isEmpty {
-                CoreDataManager.shared.createCategory(newCategoryName: newCatName)
+                RealmDataManager.shared.createCategory(newCategoryName: newCatName)
             }
         })
 
@@ -45,7 +45,7 @@ final class AlertController: UIAlertController {
             guard let textField = alert.textFields?.first,
                   let newTaskName = textField.text else { return }
             if !newTaskName.isEmpty {
-                CoreDataManager.shared.createTask(newTaskName: newTaskName)
+                RealmDataManager.shared.createTask(newTaskName: newTaskName)
             }
         })
 

@@ -7,13 +7,14 @@
 
 import Foundation
 import Combine
+import RealmSwift
 
 protocol MainPresenterProtocol: AnyObject {
     func getCategoryCount() -> Int
     func getCategoryName(_ indexPath: IndexPath) -> String
     func getColorHex(_ indexPath: IndexPath) -> String
     func plusButtonTapped()
-    func passSelectedCategory(_ categoryName: String)
+    func passSelectedCategory(indexPath: IndexPath)
     func deleteCategory(indexPath: IndexPath)
     func getDataFromCoreData()
 }
@@ -25,18 +26,18 @@ final class MainPresenter {
 
     // MARK: - Private properties
     private let colorsArray = Constants.randomColorArray
-    private var cdManager: CoreDataManager
+    private var realmDataManager: RealmDataManager
     private var cancellables: Set<AnyCancellable> = []
 
     // MARK: - Init
-    init(cdManager: CoreDataManager = CoreDataManager.shared) {
-        self.cdManager = cdManager
+    init(realmDataManager: RealmDataManager = RealmDataManager.shared) {
+        self.realmDataManager = realmDataManager
         dataBindingAndUpdateUI()
     }
 
     // MARK: - Private methods
     private func dataBindingAndUpdateUI() {
-        cdManager.$fetchedCategories
+        realmDataManager.$fetchedCategories
             .sink { [weak self]  _ in
                 guard let self else { print("Ooops"); return }
                 self.view?.updateUI()
@@ -49,16 +50,16 @@ final class MainPresenter {
 extension MainPresenter: MainPresenterProtocol {
 
     func getDataFromCoreData() {
-        cdManager.fetchCategories()
+        realmDataManager.fetchCategories()
     }
 
     func deleteCategory(indexPath: IndexPath) {
-        cdManager.deleteCategoryNEW(indexPath: indexPath)
+        realmDataManager.deleteCategory(indexPath: indexPath)
     }
 
-    func passSelectedCategory(_ categoryName: String) {
-        cdManager.getSelectedCategory(categoryName)
-        cdManager.fetchTasks()
+    func passSelectedCategory(indexPath: IndexPath) {
+        realmDataManager.setSelectedCategory(indexPath: indexPath)
+        realmDataManager.fetchTasks()
     }
 
     func plusButtonTapped() {
@@ -66,11 +67,11 @@ extension MainPresenter: MainPresenterProtocol {
     }
 
     func getCategoryCount() -> Int {
-        cdManager.fetchedCategories?.count ?? 0
+        realmDataManager.fetchedCategories?.count ?? 0
     }
 
     func getCategoryName(_ indexPath: IndexPath) -> String {
-        cdManager.fetchedCategories![indexPath.row].categoryName!
+        realmDataManager.fetchedCategories?[indexPath.row].categoryName ?? "Issue"
     }
 
     func getColorHex(_ indexPath: IndexPath) -> String {

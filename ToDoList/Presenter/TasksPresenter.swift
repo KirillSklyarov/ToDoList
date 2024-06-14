@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import RealmSwift
 
 protocol TasksPresenterProtocol: AnyObject {
     func plusButtonTapped()
@@ -21,48 +22,50 @@ protocol TasksPresenterProtocol: AnyObject {
 
 final class TasksPresenter: TasksPresenterProtocol {
 
+    // MARK: - Properties
     weak var view: TasksVCProtocol?
-    private var cdManager: CoreDataManager
+    private var realmDataManager: RealmDataManager
     private var cancellables: Set<AnyCancellable> = []
     private let colorsArray = Constants.randomColorArray
 
-    private var isSearch: Bool = false
-
-    init(cdManager: CoreDataManager = CoreDataManager.shared) {
-        self.cdManager = cdManager
+    // MARK: - Init
+    init(realmDataManager: RealmDataManager = RealmDataManager.shared) {
+        self.realmDataManager = realmDataManager
         dataBindingAndUpdateUI()
     }
 
-    func filterTasks(with filterText: String) {
-        cdManager.filterTasks(with: filterText)
-    }
-
-    func fetchTasksNotSearchMode() {
-        cdManager.fetchTasks()
-    }
-
+    // MARK: - Private methods
     private func dataBindingAndUpdateUI() {
-        cdManager.$fetchedTasks
+        realmDataManager.$fetchedTasks
             .sink { [weak self] _ in
                 self?.view?.updateUI()
             }
             .store(in: &cancellables)
     }
 
+    // MARK: - Public methods
+    func filterTasks(with filterText: String) {
+        realmDataManager.filterTasks(with: filterText)
+    }
+
+    func fetchTasksNotSearchMode() {
+        realmDataManager.fetchTasks()
+    }
+
     func deleteTask(indexPath: IndexPath) {
-        cdManager.deleteTask(indexPath: indexPath)
+        realmDataManager.deleteTask(indexPath: indexPath)
     }
 
     func getTasksCount() -> Int {
-        return cdManager.fetchedTasks?.count ?? 0
+        return realmDataManager.fetchedTasks?.count ?? 0
     }
 
     func getCategoryName() -> String {
-        return cdManager.selectedCategory!
+        return realmDataManager.getSelectedCategoryFromCDM()
     }
 
     func getTaskName(_ indexPath: IndexPath) -> String {
-        cdManager.fetchedTasks![indexPath.row].taskName!
+        realmDataManager.fetchedTasks?[indexPath.row].taskName ?? "Issue"
     }
 
     func getColorHex(_ indexPath: IndexPath) -> String {

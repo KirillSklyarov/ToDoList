@@ -106,7 +106,8 @@ final class TasksViewController: UIViewController {
     }
 
     private func showOrHidePlaceholder() {
-        if presenter.getTasksCount() == 0 {
+        let tasksCount = presenter.getTasksCount()
+        if tasksCount == 0 {
             showPlaceholder()
         } else {
             hidePlaceholder()
@@ -145,7 +146,6 @@ final class TasksViewController: UIViewController {
         placeholderImage.isHidden = true
         placeholderText.isHidden = true
     }
-
 }
 
 // MARK: - TasksVCProtocol
@@ -153,7 +153,7 @@ extension TasksViewController: TasksVCProtocol {
     
     func showAlert() {
         let alertController = AlertController()
-        alertController.showAnyAlert(screens: .Task, from: self)
+        alertController.showAlert(screens: .Task, from: self)
     }
 
     func updateUI() {

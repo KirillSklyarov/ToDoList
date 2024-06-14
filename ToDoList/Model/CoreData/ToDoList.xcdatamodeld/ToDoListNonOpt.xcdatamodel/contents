@@ -4,7 +4,7 @@
         <attribute name="categoryName" attributeType="String"/>
         <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TasksCD" inverseName="category" inverseEntity="TasksCD"/>
     </entity>
-    <entity name="TasksCD" representedClassName="TasksCD" syncable="YES">
+    <entity name="TasksCD" representedClassName="TasksCD" syncable="YES" codeGenerationType="class">
         <attribute name="taskName" attributeType="String"/>
         <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CategoryCD" inverseName="tasks" inverseEntity="CategoryCD"/>
     </entity>

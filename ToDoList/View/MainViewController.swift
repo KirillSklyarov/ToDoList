@@ -96,7 +96,7 @@ final class MainViewController: UIViewController {
 extension MainViewController: MainVCProtocol {
     func showAlert() {
         let alertController = AlertController()
-        alertController.showAnyAlert(screens: .Main, from: self)
+        alertController.showAlert(screens: .Main, from: self)
     }
 
     func updateUI() {
@@ -133,14 +133,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let taskVC = ScreenFactory.createScreen(.Task)
-        passSelectedCategory(indexPath: indexPath)
+        presenter.passSelectedCategory(indexPath: indexPath)
         navigationController?.pushViewController(taskVC, animated: true)
-    }
-
-    private func passSelectedCategory(indexPath: IndexPath) {
-        guard let cell = categoryTable.cellForRow(at: indexPath),
-              let categoryName = cell.textLabel?.text else { return }
-        presenter.passSelectedCategory(categoryName)
     }
 
     private func configureCell(cell: UITableViewCell, indexPath: IndexPath) {
