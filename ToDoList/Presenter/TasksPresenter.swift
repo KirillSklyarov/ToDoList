@@ -15,54 +15,34 @@ protocol TasksPresenterProtocol: AnyObject {
     func getColorHex(_ indexPath: IndexPath) -> String
     func getCategoryName() -> String
     func deleteTask(indexPath: IndexPath)
-    func filterTasks(filterText: String)
-    func notSearchMode()
+    func filterTasks(with filterText: String)
+    func fetchTasksNotSearchMode()
 }
 
 final class TasksPresenter: TasksPresenterProtocol {
 
     weak var view: TasksVCProtocol?
-    private var storage: DataStorage
+    private var cdManager: CoreDataManager
     private var cancellables: Set<AnyCancellable> = []
     private let colorsArray = Constants.randomColorArray
 
     private var isSearch: Bool = false
 
-    init(storage: DataStorage) {
-        self.storage = storage
-        dataBinding()
+    init(cdManager: CoreDataManager = CoreDataManager.shared) {
+        self.cdManager = cdManager
+        dataBindingAndUpdateUI()
     }
 
-    func filterTasks(filterText: String) {
-        isSearch = true
-        dataBinding()
-        storage.filterTasks(filterText: filterText)
+    func filterTasks(with filterText: String) {
+        cdManager.filterTasks(with: filterText)
     }
 
-    func notSearchMode() {
-        isSearch = false
-        dataBinding()
-    }
-
-    func dataBinding() {
-        print(isSearch)
-        if isSearch {
-            dataBindingSearchMode()
-        } else {
-            dataBindingAndUpdateUI()
-        }
+    func fetchTasksNotSearchMode() {
+        cdManager.fetchTasks()
     }
 
     private func dataBindingAndUpdateUI() {
-        storage.$tasks
-            .sink { [weak self] _ in
-                self?.view?.updateUI()
-            }
-            .store(in: &cancellables)
-    }
-
-    private func dataBindingSearchMode() {
-        storage.$filterTasks
+        cdManager.$fetchedTasks
             .sink { [weak self] _ in
                 self?.view?.updateUI()
             }
@@ -70,29 +50,19 @@ final class TasksPresenter: TasksPresenterProtocol {
     }
 
     func deleteTask(indexPath: IndexPath) {
-        let index = indexPath.row
-        storage.deleteTask(taskIndex: index)
-        view?.updateUI()
+        cdManager.deleteTask(indexPath: indexPath)
     }
 
     func getTasksCount() -> Int {
-        if isSearch {
-            return storage.filterTasks.count
-        } else {
-            return storage.tasks.count
-        }
+        return cdManager.fetchedTasks?.count ?? 0
     }
 
     func getCategoryName() -> String {
-        return storage.categoryName
+        return cdManager.selectedCategory!
     }
 
     func getTaskName(_ indexPath: IndexPath) -> String {
-        if isSearch {
-            return storage.filterTasks[indexPath.row]
-        } else {
-           return storage.tasks[indexPath.row]
-        }
+        cdManager.fetchedTasks![indexPath.row].taskName!
     }
 
     func getColorHex(_ indexPath: IndexPath) -> String {
@@ -103,3 +73,4 @@ final class TasksPresenter: TasksPresenterProtocol {
         view?.showAlert()
     }
 }
+

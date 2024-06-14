@@ -27,7 +27,7 @@ final class AlertController: UIAlertController {
             guard let textField = alert.textFields?.first,
                   let newCatName = textField.text else { return }
             if !newCatName.isEmpty {
-                CoreDataManager.shared.addCategory(newCategoryName: newCatName)
+                CoreDataManager.shared.createCategory(newCategoryName: newCatName)
             }
         })
 
@@ -44,9 +44,8 @@ final class AlertController: UIAlertController {
         alert.addAction(UIAlertAction(title: "Добавить", style: .default) { textField in
             guard let textField = alert.textFields?.first,
                   let newTaskName = textField.text else { return }
-            print("newTaskName \(newTaskName)")
             if !newTaskName.isEmpty {
-                DataStorage.shared.addNewTask(newTaskName: newTaskName)
+                CoreDataManager.shared.createTask(newTaskName: newTaskName)
             }
         })
 
