@@ -46,6 +46,10 @@ final class RealmDataManager: ObservableObject {
         return selectedCategory?.categoryName ?? "Ooops"
     }
 
+    func getSelectedCategoryColor() -> String {
+        return selectedCategory?.color ?? "FFFFF"
+    }
+
     // MARK: - Fetch
     func fetchCategories() {
         fetchedCategories = realm?.objects(Category.self)

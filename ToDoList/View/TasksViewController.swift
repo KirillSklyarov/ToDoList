@@ -68,6 +68,10 @@ final class TasksViewController: UIViewController {
         showOrHidePlaceholder()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        setupNavigation()
+    }
+
     // MARK: - IB Action
     @objc private func plusButtonTapped(sender: UIButton) {
         presenter.plusButtonTapped()
@@ -76,7 +80,6 @@ final class TasksViewController: UIViewController {
     // MARK: - Private methods
     private func setupUI() {
         view.backgroundColor = .white
-        setupNavigation()
     }
 
     private func setupNavigation() {
@@ -84,8 +87,16 @@ final class TasksViewController: UIViewController {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
 
-        let plusButton = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: plusButton, style: .plain, target: self, action: #selector(plusButtonTapped))
+        let appearance = UINavigationBarAppearance()
+        let color = presenter.getNavBarColor()
+        let titleColor = ContrastColorOf(color, returnFlat: true)
+        appearance.backgroundColor = color
+        appearance.largeTitleTextAttributes = [.foregroundColor: titleColor]
+        appearance.titleTextAttributes = [.foregroundColor: titleColor]
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.standardAppearance = appearance
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusButtonTapped))
     }
 
     private func showOrHidePlaceholder() {

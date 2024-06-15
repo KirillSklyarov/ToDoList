@@ -19,6 +19,7 @@ protocol TasksPresenterProtocol: AnyObject {
     func fetchTasksNotSearchMode()
     func getTaskDate(_ indexPath: IndexPath) -> Date
     func getGradientColor(_ indexPath: IndexPath) -> UIColor
+    func getNavBarColor() -> UIColor
 }
 
 final class TasksPresenter: TasksPresenterProtocol {
@@ -78,10 +79,18 @@ final class TasksPresenter: TasksPresenterProtocol {
 
     func getGradientColor(_ indexPath: IndexPath) -> UIColor {
         let index = indexPath.row
-        guard let totalTasks = realmDataManager.fetchedTasks?.count else { return UIColor.black}
+        let totalTasks = realmDataManager.fetchedTasks?.count ?? 1
         let percent = Double(index) / Double(totalTasks)
-        guard let color = UIColor.flatSkyBlue().darken(byPercentage: percent) else { return UIColor.black}
-        return color
+        let color = realmDataManager.getSelectedCategoryColor()
+        guard let colorAsColor = UIColor(hexString: color),
+              let taskColor = colorAsColor.darken(byPercentage: percent) else { return UIColor.black }
+        return taskColor
+    }
+
+    func getNavBarColor() -> UIColor {
+        let color = realmDataManager.getSelectedCategoryColor()
+        guard let colorAsColor = UIColor(hexString: color) else { return UIColor.black }
+        return colorAsColor
     }
 
     func plusButtonTapped() {

@@ -40,6 +40,10 @@ final class MainViewController: UIViewController {
         getData()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        setupNavigation()
+    }
+
     // MARK: - IB Action
     @objc private func plusButtonTapped(sender: UIButton) {
         presenter.plusButtonTapped()
@@ -51,7 +55,6 @@ final class MainViewController: UIViewController {
     }
 
     private func setupUI() {
-        setupNavigation()
         view.backgroundColor = .white
     }
 
@@ -66,10 +69,7 @@ final class MainViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = .white
 
-
-        let plusButton = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: plusButton, style: .plain, target: self, action: #selector(plusButtonTapped))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusButtonTapped))
     }
 }
 
