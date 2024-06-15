@@ -7,15 +7,17 @@
 
 import Foundation
 import Combine
+import Chameleon
 
 protocol MainPresenterProtocol: AnyObject {
     func getCategoryCount() -> Int
     func getCategoryName(_ indexPath: IndexPath) -> String
-    func getColorHex(_ indexPath: IndexPath) -> String
     func plusButtonTapped()
     func passSelectedCategory(indexPath: IndexPath)
     func deleteCategory(indexPath: IndexPath)
     func getDataFromCoreData()
+    func getRandomColor() -> UIColor
+    func getCategoryColor(_ indexPath: IndexPath) -> UIColor
 }
 
 final class MainPresenter {
@@ -24,7 +26,6 @@ final class MainPresenter {
     weak var view: MainVCProtocol?
 
     // MARK: - Private properties
-    private let colorsArray = Constants.randomColorArray
     private var realmDataManager: RealmDataManager
     private var cancellables: Set<AnyCancellable> = []
 
@@ -73,7 +74,17 @@ extension MainPresenter: MainPresenterProtocol {
         realmDataManager.fetchedCategories?[indexPath.row].categoryName ?? "Issue"
     }
 
-    func getColorHex(_ indexPath: IndexPath) -> String {
-        colorsArray[indexPath.row]
+    func getCategoryColor(_ indexPath: IndexPath) -> UIColor {
+        let colorHex = realmDataManager.fetchedCategories?[indexPath.row].color ?? "FFFFF"
+        return UIColor(hexString: colorHex)
+    }
+
+    func getRandomColor() -> UIColor {
+        UIColor.randomFlat()
+    }
+
+    func getChameleonColorHex() -> String {
+        let color = getRandomColor()
+        return color.hexValue()
     }
 }

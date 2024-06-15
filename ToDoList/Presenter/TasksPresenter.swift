@@ -7,17 +7,18 @@
 
 import Foundation
 import Combine
+import Chameleon
 
 protocol TasksPresenterProtocol: AnyObject {
     func plusButtonTapped()
     func getTasksCount() -> Int
     func getTaskName(_ indexPath: IndexPath) -> String
-    func getColorHex(_ indexPath: IndexPath) -> String
     func getCategoryName() -> String
     func deleteTask(indexPath: IndexPath)
     func filterTasks(with filterText: String)
     func fetchTasksNotSearchMode()
     func getTaskDate(_ indexPath: IndexPath) -> Date
+    func getGradientColor(_ indexPath: IndexPath) -> UIColor
 }
 
 final class TasksPresenter: TasksPresenterProtocol {
@@ -26,7 +27,6 @@ final class TasksPresenter: TasksPresenterProtocol {
     weak var view: TasksVCProtocol?
     private var realmDataManager: RealmDataManager
     private var cancellables: Set<AnyCancellable> = []
-    private let colorsArray = Constants.randomColorArray
 
     // MARK: - Init
     init(realmDataManager: RealmDataManager = RealmDataManager.shared) {
@@ -65,19 +65,26 @@ final class TasksPresenter: TasksPresenterProtocol {
     }
 
     func getTaskName(_ indexPath: IndexPath) -> String {
-        realmDataManager.fetchedTasks?[indexPath.row].taskName ?? "Issue"
+        let taskName = realmDataManager.fetchedTasks?[indexPath.row].taskName ?? "Issue"
+        let date = realmDataManager.fetchedTasks?[indexPath.row].createdDate ?? Date()
+        let formattedDate = DateFormatter.fromDateToString(date: date)
+        let text = taskName+" "+"(\(formattedDate))"
+        return text
     }
 
     func getTaskDate(_ indexPath: IndexPath) -> Date {
         realmDataManager.fetchedTasks?[indexPath.row].createdDate ?? Date()
     }
 
-    func getColorHex(_ indexPath: IndexPath) -> String {
-        colorsArray[indexPath.row]
+    func getGradientColor(_ indexPath: IndexPath) -> UIColor {
+        let index = indexPath.row
+        guard let totalTasks = realmDataManager.fetchedTasks?.count else { return UIColor.black}
+        let percent = Double(index) / Double(totalTasks)
+        guard let color = UIColor.flatSkyBlue().darken(byPercentage: percent) else { return UIColor.black}
+        return color
     }
 
     func plusButtonTapped() {
         view?.showAlert()
     }
 }
-

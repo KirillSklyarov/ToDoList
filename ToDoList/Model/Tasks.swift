@@ -8,8 +8,8 @@
 import Foundation
 import RealmSwift
 
-final class TasksCD: Object {
+final class Tasks: Object {
     @objc dynamic var taskName: String = ""
     @objc dynamic var createdDate: Date = Date()
-    var parentCategory = LinkingObjects(fromType: CategoryCD.self, property: "tasks")
+    var parentCategory = LinkingObjects(fromType: Category.self, property: "tasks")
 }

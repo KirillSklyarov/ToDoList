@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Chameleon
 
 protocol MainVCProtocol: AnyObject {
     func showAlert()
@@ -16,12 +17,7 @@ final class MainViewController: UIViewController {
 
     // MARK: - UI Properties
     private lazy var categoryTable: UITableView = {
-        let table = UITableView()
-        table.dataSource = self
-        table.delegate = self
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        table.translatesAutoresizingMaskIntoConstraints = false
-        return table
+        return setupAppTableView()
     } ()
 
     // MARK: - Other Properties
@@ -56,9 +52,7 @@ final class MainViewController: UIViewController {
 
     private func setupUI() {
         setupNavigation()
-
         view.backgroundColor = .white
-        setupTableView()
     }
 
     private func setupNavigation() {
@@ -76,19 +70,6 @@ final class MainViewController: UIViewController {
         let plusButton = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal)
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: plusButton, style: .plain, target: self, action: #selector(plusButtonTapped))
-    }
-
-    private func setupTableView() {
-        view.addSubview(categoryTable)
-
-        categoryTable.backgroundColor = .white
-
-        NSLayoutConstraint.activate([
-            categoryTable.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            categoryTable.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            categoryTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            categoryTable.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
     }
 }
 
@@ -113,13 +94,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier) else { return UITableViewCell() }
         configureCell(cell: cell, indexPath: indexPath)
         return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        Constants.cellHeight
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -141,9 +118,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         let categoryName = presenter.getCategoryName(indexPath)
         cell.textLabel?.text = categoryName
         cell.textLabel?.textColor = .white
-
-        let colorString = presenter.getColorHex(indexPath)
-        cell.backgroundColor = UIColor(hexString: colorString)
+        cell.backgroundColor = presenter.getCategoryColor(indexPath)
         cell.selectionStyle = .none
     }
 }

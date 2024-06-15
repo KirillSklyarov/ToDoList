@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ChameleonSwift
 
 protocol TasksVCProtocol: AnyObject {
     func showAlert()
@@ -16,13 +17,9 @@ final class TasksViewController: UIViewController {
 
     // MARK: - UI Properties
     private lazy var tasksTable: UITableView = {
-        let table = UITableView()
-        table.dataSource = self
-        table.delegate = self
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        table.translatesAutoresizingMaskIntoConstraints = false
-        return table
+        return setupAppTableView()
     } ()
+
     private lazy var placeholderImage: UIImageView = {
         let imageView = UIImageView()
         let image = UIImage(systemName: "x.circle.fill")
@@ -80,7 +77,6 @@ final class TasksViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .white
         setupNavigation()
-        setupTableView()
     }
 
     private func setupNavigation() {
@@ -90,19 +86,6 @@ final class TasksViewController: UIViewController {
 
         let plusButton = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: plusButton, style: .plain, target: self, action: #selector(plusButtonTapped))
-    }
-
-    private func setupTableView() {
-        view.addSubview(tasksTable)
-
-        tasksTable.backgroundColor = .white
-
-        NSLayoutConstraint.activate([
-            tasksTable.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tasksTable.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tasksTable.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tasksTable.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
     }
 
     private func showOrHidePlaceholder() {
@@ -171,13 +154,9 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier) else { return UITableViewCell() }
         configureCell(cell: cell, indexPath: indexPath)
         return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        Constants.cellHeight
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -191,16 +170,12 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
 
     private func configureCell(cell: UITableViewCell, indexPath: IndexPath) {
         let taskName = presenter.getTaskName(indexPath)
-        let date = presenter.getTaskDate(indexPath)
+        let color = presenter.getGradientColor(indexPath)
 
-        let formattedDate = DateFormatter.fromDateToString(date: date)
-        let text = taskName+" "+"(\(formattedDate))"
+        cell.textLabel?.text = taskName
+        cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
 
-        cell.textLabel?.text = text
-        cell.textLabel?.textColor = .white
-
-        let colorString = presenter.getColorHex(indexPath)
-        cell.backgroundColor = UIColor(hexString: colorString)
+        cell.backgroundColor = color
         cell.selectionStyle = .none
     }
 }

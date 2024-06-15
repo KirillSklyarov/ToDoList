@@ -7,22 +7,26 @@
 
 import Foundation
 import RealmSwift
+import Chameleon
 
 final class RealmDataManager: ObservableObject {
 
     static let shared = RealmDataManager()
-    private var selectedCategory: CategoryCD?
+    private var selectedCategory: Category?
 
     private var realm: Realm?
 
-    @Published var fetchedCategories: Results<CategoryCD>?
-    @Published var fetchedTasks: Results<TasksCD>?
+    @Published var fetchedCategories: Results<Category>?
+    @Published var fetchedTasks: Results<Tasks>?
 
     private init() {
         let config = Realm.Configuration(
-            schemaVersion: 2,
+            schemaVersion: 4,
             migrationBlock: { migration, oldSchemaVersion in
-                if oldSchemaVersion < 1 {  }
+                if oldSchemaVersion < 4 {
+                    migration.enumerateObjects(ofType: Category.className()) { oldObject, newObject in newObject?["color"] = ""
+                    }
+                }
             }
         )
         Realm.Configuration.defaultConfiguration = config
@@ -44,7 +48,7 @@ final class RealmDataManager: ObservableObject {
 
     // MARK: - Fetch
     func fetchCategories() {
-        fetchedCategories = realm?.objects(CategoryCD.self)
+        fetchedCategories = realm?.objects(Category.self)
     }
 
     func fetchTasks() {
@@ -53,15 +57,16 @@ final class RealmDataManager: ObservableObject {
 
     // MARK: - CRUD
     func createCategory(newCategoryName: String) {
-        let newCategory = CategoryCD()
+        let newCategory = Category()
         newCategory.categoryName = newCategoryName
+        newCategory.color = UIColor.randomFlat().hexValue()
         saveCategory(newCategory)
         print("✅ New category created successfully")
         fetchCategories()
     }
 
     func createTask(newTaskName: String) {
-        let newTask = TasksCD()
+        let newTask = Tasks()
         newTask.taskName = newTaskName
         saveTask(newTask)
         print("✅ New task created successfully")
@@ -83,7 +88,7 @@ final class RealmDataManager: ObservableObject {
     }
 
     // MARK: - Private methods
-    private func saveCategory(_ newCategory: CategoryCD) {
+    private func saveCategory(_ newCategory: Category) {
         do {
             try realm?.write {
                 realm?.add(newCategory)
@@ -93,7 +98,7 @@ final class RealmDataManager: ObservableObject {
         }
     }
 
-    private func saveTask(_ newTask: TasksCD) {
+    private func saveTask(_ newTask: Tasks) {
         do {
             try realm?.write {
                 selectedCategory?.tasks.append(newTask)
@@ -103,7 +108,7 @@ final class RealmDataManager: ObservableObject {
         }
     }
 
-    private func deleteTask(_ taskToDelete: TasksCD) {
+    private func deleteTask(_ taskToDelete: Tasks) {
         do {
             try realm?.write {
                 realm?.delete(taskToDelete)
@@ -113,7 +118,7 @@ final class RealmDataManager: ObservableObject {
         }
     }
 
-    private func deleteCategory(_ categoryToDelete: CategoryCD) {
+    private func deleteCategory(_ categoryToDelete: Category) {
         do {
             try realm?.write {
                 realm?.delete(categoryToDelete)

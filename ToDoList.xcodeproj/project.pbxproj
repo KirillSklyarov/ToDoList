@@ -8,9 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		73A469DB2C1C3E97005C0956 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 73A469DA2C1C3E97005C0956 /* RealmSwift */; };
-		73A469DD2C1C446C005C0956 /* CategoryCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A469DC2C1C446C005C0956 /* CategoryCD.swift */; };
-		73A469DF2C1C51F7005C0956 /* TasksCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A469DE2C1C51F7005C0956 /* TasksCD.swift */; };
+		73A469DD2C1C446C005C0956 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A469DC2C1C446C005C0956 /* Category.swift */; };
+		73A469DF2C1C51F7005C0956 /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A469DE2C1C51F7005C0956 /* Tasks.swift */; };
 		73A469E12C1D98D8005C0956 /* DateFormatter+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A469E02C1D98D8005C0956 /* DateFormatter+Ext.swift */; };
+		73A469E32C1DAF8B005C0956 /* TableView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A469E22C1DAF8B005C0956 /* TableView+Ext.swift */; };
+		73A469E62C1DB46B005C0956 /* Chameleon in Frameworks */ = {isa = PBXBuildFile; productRef = 73A469E52C1DB46B005C0956 /* Chameleon */; };
+		73A469E82C1DB46B005C0956 /* ChameleonSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 73A469E72C1DB46B005C0956 /* ChameleonSwift */; };
 		73CF03062C188B82002E1599 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CF03052C188B82002E1599 /* AppDelegate.swift */; };
 		73CF03082C188B82002E1599 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CF03072C188B82002E1599 /* SceneDelegate.swift */; };
 		73CF030A2C188B82002E1599 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CF03092C188B82002E1599 /* MainViewController.swift */; };
@@ -27,9 +30,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		73A469DC2C1C446C005C0956 /* CategoryCD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCD.swift; sourceTree = "<group>"; };
-		73A469DE2C1C51F7005C0956 /* TasksCD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksCD.swift; sourceTree = "<group>"; };
+		73A469DC2C1C446C005C0956 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		73A469DE2C1C51F7005C0956 /* Tasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
 		73A469E02C1D98D8005C0956 /* DateFormatter+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Ext.swift"; sourceTree = "<group>"; };
+		73A469E22C1DAF8B005C0956 /* TableView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableView+Ext.swift"; sourceTree = "<group>"; };
 		73CF03022C188B82002E1599 /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73CF03052C188B82002E1599 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		73CF03072C188B82002E1599 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -53,6 +57,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				73A469DB2C1C3E97005C0956 /* RealmSwift in Frameworks */,
+				73A469E62C1DB46B005C0956 /* Chameleon in Frameworks */,
+				73A469E82C1DB46B005C0956 /* ChameleonSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,8 +121,8 @@
 			isa = PBXGroup;
 			children = (
 				73E835212C19BF020074A64A /* RealmDataManager.swift */,
-				73A469DC2C1C446C005C0956 /* CategoryCD.swift */,
-				73A469DE2C1C51F7005C0956 /* TasksCD.swift */,
+				73A469DC2C1C446C005C0956 /* Category.swift */,
+				73A469DE2C1C51F7005C0956 /* Tasks.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -134,6 +140,7 @@
 			children = (
 				73FE7C812C189EF300B8179F /* UIColor+Ext.swift */,
 				73A469E02C1D98D8005C0956 /* DateFormatter+Ext.swift */,
+				73A469E22C1DAF8B005C0956 /* TableView+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -181,6 +188,8 @@
 			name = ToDoList;
 			packageProductDependencies = (
 				73A469DA2C1C3E97005C0956 /* RealmSwift */,
+				73A469E52C1DB46B005C0956 /* Chameleon */,
+				73A469E72C1DB46B005C0956 /* ChameleonSwift */,
 			);
 			productName = ToDoList;
 			productReference = 73CF03022C188B82002E1599 /* ToDoList.app */;
@@ -212,6 +221,7 @@
 			mainGroup = 73CF02F92C188B82002E1599;
 			packageReferences = (
 				73A469D92C1C3E97005C0956 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				73A469E42C1DB46B005C0956 /* XCRemoteSwiftPackageReference "Chameleon" */,
 			);
 			productRefGroup = 73CF03032C188B82002E1599 /* Products */;
 			projectDirPath = "";
@@ -246,12 +256,13 @@
 				73CF03062C188B82002E1599 /* AppDelegate.swift in Sources */,
 				73FE7C7F2C189D2700B8179F /* Constants.swift in Sources */,
 				73FE7C822C189EF300B8179F /* UIColor+Ext.swift in Sources */,
-				73A469DF2C1C51F7005C0956 /* TasksCD.swift in Sources */,
+				73A469DF2C1C51F7005C0956 /* Tasks.swift in Sources */,
 				73CF03082C188B82002E1599 /* SceneDelegate.swift in Sources */,
-				73A469DD2C1C446C005C0956 /* CategoryCD.swift in Sources */,
+				73A469DD2C1C446C005C0956 /* Category.swift in Sources */,
 				73A469E12C1D98D8005C0956 /* DateFormatter+Ext.swift in Sources */,
 				73FE7C892C18CCAB00B8179F /* MainPresenter.swift in Sources */,
 				73E835222C19BF020074A64A /* RealmDataManager.swift in Sources */,
+				73A469E32C1DAF8B005C0956 /* TableView+Ext.swift in Sources */,
 				73FE7C842C18A23000B8179F /* TasksViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -403,7 +414,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -435,7 +446,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -485,6 +496,14 @@
 				kind = branch;
 			};
 		};
+		73A469E42C1DB46B005C0956 /* XCRemoteSwiftPackageReference "Chameleon" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/drasticactions/Chameleon.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -492,6 +511,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 73A469D92C1C3E97005C0956 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
+		};
+		73A469E52C1DB46B005C0956 /* Chameleon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 73A469E42C1DB46B005C0956 /* XCRemoteSwiftPackageReference "Chameleon" */;
+			productName = Chameleon;
+		};
+		73A469E72C1DB46B005C0956 /* ChameleonSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 73A469E42C1DB46B005C0956 /* XCRemoteSwiftPackageReference "Chameleon" */;
+			productName = ChameleonSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

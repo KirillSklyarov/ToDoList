@@ -8,8 +8,9 @@
 import Foundation
 import RealmSwift
 
-final class CategoryCD: Object {
+final class Category: Object {
     @objc dynamic var categoryName: String = ""
-    var tasks = List<TasksCD>()
+    @objc dynamic var color: String = ""
+    var tasks = List<Tasks>()
 }
 
