@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import RealmSwift
 
 protocol TasksPresenterProtocol: AnyObject {
     func plusButtonTapped()
@@ -18,6 +17,7 @@ protocol TasksPresenterProtocol: AnyObject {
     func deleteTask(indexPath: IndexPath)
     func filterTasks(with filterText: String)
     func fetchTasksNotSearchMode()
+    func getTaskDate(_ indexPath: IndexPath) -> Date
 }
 
 final class TasksPresenter: TasksPresenterProtocol {
@@ -66,6 +66,10 @@ final class TasksPresenter: TasksPresenterProtocol {
 
     func getTaskName(_ indexPath: IndexPath) -> String {
         realmDataManager.fetchedTasks?[indexPath.row].taskName ?? "Issue"
+    }
+
+    func getTaskDate(_ indexPath: IndexPath) -> Date {
+        realmDataManager.fetchedTasks?[indexPath.row].createdDate ?? Date()
     }
 
     func getColorHex(_ indexPath: IndexPath) -> String {

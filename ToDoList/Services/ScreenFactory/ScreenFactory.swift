@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import RealmSwift
 
 final class ScreenFactory {
 
@@ -14,8 +13,6 @@ final class ScreenFactory {
         case Main
         case Task
     }
-
-    static var realm = try! Realm()
 
     static func createScreen(_ screen: Screens) -> UIViewController {
         switch screen {

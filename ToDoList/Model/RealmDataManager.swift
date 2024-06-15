@@ -8,17 +8,31 @@
 import Foundation
 import RealmSwift
 
-final class RealmDataManager: NSObject, ObservableObject {
+final class RealmDataManager: ObservableObject {
 
     static let shared = RealmDataManager()
     private var selectedCategory: CategoryCD?
 
-    private let realm = try! Realm()
+    private var realm: Realm?
 
     @Published var fetchedCategories: Results<CategoryCD>?
     @Published var fetchedTasks: Results<TasksCD>?
 
-    private override init() { }
+    private init() {
+        let config = Realm.Configuration(
+            schemaVersion: 2,
+            migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 1 {  }
+            }
+        )
+        Realm.Configuration.defaultConfiguration = config
+
+        do {
+            realm = try Realm()
+        } catch {
+            print("Error opening realm \(error)")
+        }
+    }
 
     func setSelectedCategory(indexPath: IndexPath) {
         selectedCategory = fetchedCategories?[indexPath.row]
@@ -30,11 +44,11 @@ final class RealmDataManager: NSObject, ObservableObject {
 
     // MARK: - Fetch
     func fetchCategories() {
-        fetchedCategories = realm.objects(CategoryCD.self)
+        fetchedCategories = realm?.objects(CategoryCD.self)
     }
 
     func fetchTasks() {
-        fetchedTasks = selectedCategory?.tasks.sorted(byKeyPath: "taskName", ascending: true)
+        fetchedTasks = selectedCategory?.tasks.sorted(byKeyPath: "createdDate", ascending: true)
     }
 
     // MARK: - CRUD
@@ -71,8 +85,8 @@ final class RealmDataManager: NSObject, ObservableObject {
     // MARK: - Private methods
     private func saveCategory(_ newCategory: CategoryCD) {
         do {
-            try realm.write {
-                realm.add(newCategory)
+            try realm?.write {
+                realm?.add(newCategory)
             }
         } catch {
             print("Error saving category \(error)")
@@ -81,7 +95,7 @@ final class RealmDataManager: NSObject, ObservableObject {
 
     private func saveTask(_ newTask: TasksCD) {
         do {
-            try realm.write {
+            try realm?.write {
                 selectedCategory?.tasks.append(newTask)
             }
         } catch {
@@ -91,8 +105,8 @@ final class RealmDataManager: NSObject, ObservableObject {
 
     private func deleteTask(_ taskToDelete: TasksCD) {
         do {
-            try realm.write {
-                realm.delete(taskToDelete)
+            try realm?.write {
+                realm?.delete(taskToDelete)
             }
         } catch {
             print("Error deleting task \(error)")
@@ -101,8 +115,8 @@ final class RealmDataManager: NSObject, ObservableObject {
 
     private func deleteCategory(_ categoryToDelete: CategoryCD) {
         do {
-            try realm.write {
-                realm.delete(categoryToDelete)
+            try realm?.write {
+                realm?.delete(categoryToDelete)
             }
         } catch {
             print("Error deleting category \(error)")

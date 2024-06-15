@@ -191,7 +191,12 @@ extension TasksViewController: UITableViewDelegate, UITableViewDataSource {
 
     private func configureCell(cell: UITableViewCell, indexPath: IndexPath) {
         let taskName = presenter.getTaskName(indexPath)
-        cell.textLabel?.text = taskName
+        let date = presenter.getTaskDate(indexPath)
+
+        let formattedDate = DateFormatter.fromDateToString(date: date)
+        let text = taskName+" "+"(\(formattedDate))"
+
+        cell.textLabel?.text = text
         cell.textLabel?.textColor = .white
 
         let colorString = presenter.getColorHex(indexPath)

@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import RealmSwift
 
 protocol MainPresenterProtocol: AnyObject {
     func getCategoryCount() -> Int

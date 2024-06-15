@@ -10,6 +10,7 @@
 		73A469DB2C1C3E97005C0956 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 73A469DA2C1C3E97005C0956 /* RealmSwift */; };
 		73A469DD2C1C446C005C0956 /* CategoryCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A469DC2C1C446C005C0956 /* CategoryCD.swift */; };
 		73A469DF2C1C51F7005C0956 /* TasksCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A469DE2C1C51F7005C0956 /* TasksCD.swift */; };
+		73A469E12C1D98D8005C0956 /* DateFormatter+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A469E02C1D98D8005C0956 /* DateFormatter+Ext.swift */; };
 		73CF03062C188B82002E1599 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CF03052C188B82002E1599 /* AppDelegate.swift */; };
 		73CF03082C188B82002E1599 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CF03072C188B82002E1599 /* SceneDelegate.swift */; };
 		73CF030A2C188B82002E1599 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CF03092C188B82002E1599 /* MainViewController.swift */; };
@@ -28,6 +29,7 @@
 /* Begin PBXFileReference section */
 		73A469DC2C1C446C005C0956 /* CategoryCD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCD.swift; sourceTree = "<group>"; };
 		73A469DE2C1C51F7005C0956 /* TasksCD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksCD.swift; sourceTree = "<group>"; };
+		73A469E02C1D98D8005C0956 /* DateFormatter+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Ext.swift"; sourceTree = "<group>"; };
 		73CF03022C188B82002E1599 /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73CF03052C188B82002E1599 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		73CF03072C188B82002E1599 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				73FE7C812C189EF300B8179F /* UIColor+Ext.swift */,
+				73A469E02C1D98D8005C0956 /* DateFormatter+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -246,6 +249,7 @@
 				73A469DF2C1C51F7005C0956 /* TasksCD.swift in Sources */,
 				73CF03082C188B82002E1599 /* SceneDelegate.swift in Sources */,
 				73A469DD2C1C446C005C0956 /* CategoryCD.swift in Sources */,
+				73A469E12C1D98D8005C0956 /* DateFormatter+Ext.swift in Sources */,
 				73FE7C892C18CCAB00B8179F /* MainPresenter.swift in Sources */,
 				73E835222C19BF020074A64A /* RealmDataManager.swift in Sources */,
 				73FE7C842C18A23000B8179F /* TasksViewController.swift in Sources */,

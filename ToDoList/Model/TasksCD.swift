@@ -10,5 +10,6 @@ import RealmSwift
 
 final class TasksCD: Object {
     @objc dynamic var taskName: String = ""
+    @objc dynamic var createdDate: Date = Date()
     var parentCategory = LinkingObjects(fromType: CategoryCD.self, property: "tasks")
 }
